@@ -110,61 +110,6 @@ Key sections:
 - **§6 Abstract Inclusion** — `\includepaper`
 - **§7 Participant List** — `\putpart`
 - **§8 Color Customization** — `\setdaycolors`, `\setplenarycolors`, `\setsessioncolors`
-- **§11 Publishing to CTAN and Overleaf**
-
-## Publishing to CTAN (for the LaTeX community)
-
-### Step 1: Prepare the package
-
-Ensure you have:
-- `confprogbook.cls` — the class file
-- `confprogbook-doc.pdf` — compiled documentation
-- `README.md` — this file
-- `LICENSE` — LPPL 1.3c
-- `example/` — working example
-
-### Step 2: Create the archive
-
-```bash
-# Compile documentation
-cd confprogbook
-pdflatex confprogbook-doc.tex
-pdflatex confprogbook-doc.tex
-
-# Create zip (from parent directory)
-cd ..
-zip -r confprogbook.zip confprogbook/ \
-  -x "confprogbook/boa2026-bis/*" \
-  -x "confprogbook/.git/*"
-```
-
-### Step 3: Submit to CTAN
-
-1. Go to **https://ctan.org/upload**
-2. Fill in:
-   - **Package name:** `confprogbook`
-   - **Summary:** A LaTeX class for typesetting conference program books (Book of Abstracts)
-   - **Version:** 1.0
-   - **License:** LPPL 1.3c
-   - **Author:** John Aoga
-   - **Topic:** Conference proceedings, Document class
-   - **Home repository:** (your GitHub URL)
-3. Upload `confprogbook.zip`
-4. CTAN volunteers review and accept (typically 1–3 days)
-
-### Step 4: TeX Live & MiKTeX integration
-
-Once accepted on CTAN:
-- **TeX Live** picks it up in the next update cycle (daily for tlcontrib, or next annual release)
-- **MiKTeX** syncs within days
-- Users can then install via: `tlmgr install confprogbook` (TeX Live) or MiKTeX Console
-
-### Step 5: Overleaf availability
-
-Once in TeX Live:
-- **Automatic:** Overleaf updates its TeX Live annually. After the next update, `\documentclass{confprogbook}` works natively on Overleaf.
-- **Immediate (template):** Create an Overleaf project with the class + example, then submit to the [Overleaf Gallery](https://www.overleaf.com/latex/templates) via *Menu → Submit to Gallery*.
-- **Immediate (manual):** Users can always upload `confprogbook.cls` directly.
 
 ## Color Customization
 
@@ -192,7 +137,7 @@ If you have an existing conference book with manual `\newcommand` definitions:
 
 ## License
 
-Copyright (c) 2026 John Aoga.
+Copyright (c) 2026 [John Aoga](https://github.com/johnaoga).
 
 This work may be distributed and/or modified under the conditions of the
 LaTeX Project Public License, version 1.3c or later.
@@ -200,4 +145,4 @@ See https://www.latex-project.org/lppl/
 
 ## Acknowledgments
 
-Inspired by the LaTeX setup used for the *Benelux Meeting on Systems and Control* Book of Abstracts. Thanks to Gianluca Bianchin, Julien Hendrickx, Raphaël Jungers, and Erjen Lefeber.
+Inspired by the LaTeX setup used for the *Benelux Meeting on Systems and Control* Book of Abstracts. Thanks to Erjen Lefeber who generously provided the initial template.

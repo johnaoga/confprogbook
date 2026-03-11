@@ -1,0 +1,730 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyvrb}
+\usepackage{metalogo}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  urlcolor=blue!70!black,
+  citecolor=green!50!black,
+  pdftitle={confprogbook — A LaTeX class for conference program books},
+  pdfauthor={John Aoga},
+}
+
+\lstset{
+  language=[LaTeX]TeX,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{red!60!black},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  backgroundcolor=\color{gray!5},
+  rulecolor=\color{gray!40},
+  xleftmargin=1em,
+  xrightmargin=1em,
+  aboveskip=1em,
+  belowskip=1em,
+  moretexcs={conferencetitle,conferencesubtitle,conferenceedition,conferencedate,
+    conferencelocation,conferenceshort,booktitle,editors,institution,
+    institutionaddress,copyrightnotice,conferencelogo,pdfscale,
+    makefrontcover,makefrontmatter,cpbbeginprogram,cpbendprogram,
+    cpbbeginabstracts,cpbendabstracts,cpbbeginparticipants,cpbendparticipants,
+    cpbbegincomments,cpbendcomments,programpartindex,
+    dayheading,pleheading,sesheading,puttalk,puttalktitle,putplen,putpart,
+    includepaper,programskip,euros,RED,
+    setdaycolors,setplenarycolors,setsessioncolors,settableaccentcolor,
+    setlandscapecolwidth,setpartname,accentcol,rr},
+}
+
+
+\newcommand{\pkg}[1]{\textsf{#1}}
+\newcommand{\cls}[1]{\textsf{#1}}
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
+\newcommand{\meta}[1]{\ensuremath{\langle}\textit{#1}\ensuremath{\rangle}}
+\newcommand{\marg}[1]{\texttt{\{}\meta{#1}\texttt{\}}}
+\newcommand{\oarg}[1]{\texttt{[}\meta{#1}\texttt{]}}
+
+\title{%
+  \cls{confprogbook} --- A \LaTeX{} class for\\
+  conference program books\\[1ex]
+  \large Version 1.0 --- 2026/03/11%
+}
+\author{John Aoga\\\texttt{john.aoga@uclouvain.be}}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+The \cls{confprogbook} class provides a complete, ready-to-use solution for typesetting
+conference \emph{Book of Abstracts} or \emph{Program Books}. It is built on the standard
+\cls{book} class and offers high-level commands for cover pages, programmatic tables of
+contents with dotted leaders, session and talk entries, PDF abstract inclusion,
+participant lists, and organizational comments --- all with customizable colors.
+The class was originally developed for the Benelux Meeting on Systems and Control
+and has been generalized for use by any academic conference.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+%% ================================================================
+\section{Introduction}
+\label{sec:intro}
+%% ================================================================
+
+Organizing a conference often requires producing a \emph{Book of Abstracts}: a printed
+or PDF booklet that contains the program schedule, all submitted paper abstracts
+(as included PDFs), a list of participants, and practical information.
+
+The \cls{confprogbook} class encapsulates years of experience producing such books
+into a single, easy-to-use \LaTeX{} class. Instead of manually configuring dozens
+of packages and defining custom commands, you simply write:
+
+\begin{lstlisting}
+\documentclass[a4paper]{confprogbook}
+\conferencetitle{10th International Symposium on Examples}
+\conferencedate{June 1--3, 2027}
+\conferencelocation{Zurich, Switzerland}
+\end{lstlisting}
+
+\noindent and the class takes care of page layout, headers/footers, colors,
+and provides all the commands you need.
+
+\subsection{Features}
+
+\begin{itemize}[nosep]
+  \item Automatic cover page and front matter generation.
+  \item Colored, boxed headings for days, plenary talks, and sessions.
+  \item Programmatic table of contents with dotted leaders and page references.
+  \item Simple command to include paper PDFs with auto-labeling.
+  \item Participant list formatting with email \texttt{mailto:} links.
+  \item Landscape program overview tables with accent colors.
+  \item Fully customizable color scheme.
+  \item Compatible with pdf\LaTeX{}, \LuaLaTeX{}, and \XeLaTeX{}.
+\end{itemize}
+
+\subsection{License}
+
+This work is released under the \LaTeX{} Project Public License v1.3c or later.
+See \url{https://www.latex-project.org/lppl/}.
+
+%% ================================================================
+\section{Quick Start}
+\label{sec:quickstart}
+%% ================================================================
+
+Below is a minimal working example that produces a complete conference program book.
+
+\begin{lstlisting}
+\documentclass[a4paper]{confprogbook}
+
+%% --- Conference metadata ---
+\conferencetitle{10th International Symposium on Examples}
+\conferencedate{June 1--3, 2027}
+\conferencelocation{Zurich, Switzerland}
+\conferenceshort{ISE 2027}
+\booktitle{Book of Abstracts}
+\editors{Alice Smith, Bob Jones, and Carol Lee}
+\institution{ETH Zurich}
+\institutionaddress{Zurich, Switzerland}
+\conferencelogo[0.15]{logo.png}
+
+\begin{document}
+
+%% --- Front matter ---
+\makefrontcover
+\makefrontmatter
+
+%% --- Program ---
+\cpbbeginprogram
+\input{program}      % your program entries
+\programpartindex    % automatic part index
+\cpbendprogram
+
+%% --- Abstracts ---
+\cpbbeginabstracts
+\input{abstracts}    % \includepaper commands
+\cpbendabstracts
+
+%% --- Participants ---
+\cpbbeginparticipants
+\input{participants} % \putpart commands
+\cpbendparticipants
+
+%% --- Comments ---
+\cpbbegincomments
+\input{comments}     % free-form LaTeX content
+\cpbendcomments
+
+\end{document}
+\end{lstlisting}
+
+%% ================================================================
+\section{Class Options}
+\label{sec:options}
+%% ================================================================
+
+The \cls{confprogbook} class is built on the standard \cls{book} class.
+All options are forwarded directly to \cls{book}. Common choices:
+
+\begin{lstlisting}
+\documentclass[a4paper]{confprogbook}      % A4 (default recommended)
+\documentclass[letterpaper]{confprogbook}  % US Letter
+\documentclass[a4paper,12pt]{confprogbook} % Larger base font
+\end{lstlisting}
+
+%% ================================================================
+\section{Conference Metadata}
+\label{sec:metadata}
+%% ================================================================
+
+All metadata commands should be called in the preamble, before
+\verb|\begin{document}|. They configure the cover page, headers,
+and PDF metadata.
+
+\begin{center}
+\begin{tabular}{lp{8cm}}
+\toprule
+\textbf{Command} & \textbf{Description} \\
+\midrule
+\cmd{conferencetitle}\marg{text} & Main conference title (shown on cover). \\
+\cmd{conferencesubtitle}\marg{text} & Optional subtitle, shown below the title. \\
+\cmd{conferenceedition}\marg{text} & Edition string, e.g., \texttt{45th}. \\
+\cmd{conferencedate}\marg{text} & Conference dates. \\
+\cmd{conferencelocation}\marg{text} & Venue / city / country. \\
+\cmd{conferenceshort}\marg{text} & Short name used in page headers. \\
+\cmd{booktitle}\marg{text} & Title of the book (default: \textit{Book of Abstracts}). \\
+\cmd{editors}\marg{text} & Editor names for the front matter page. \\
+\cmd{institution}\marg{text} & Publishing institution name. \\
+\cmd{institutionaddress}\marg{text} & Institution address. \\
+\cmd{copyrightnotice}\marg{text} & Custom copyright text. \\
+\cmd{conferencelogo}\oarg{scale}\marg{file} & Logo image file and optional scale (default 0.2). \\
+\cmd{pdfscale}\marg{value} & Scale factor for included abstract PDFs (default 0.95). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ================================================================
+\section{Document Structure Commands}
+\label{sec:structure}
+%% ================================================================
+
+The class provides high-level commands that set up each major section of
+the book. Use them in order inside \verb|\begin{document}...\end{document}|.
+
+\subsection{Cover and Front Matter}
+
+\begin{description}[style=nextline, font=\ttfamily\bfseries, leftmargin=2cm]
+  \item[\cmd{makefrontcover}]
+    Generates the title page using the metadata you defined. Includes conference
+    title, subtitle, dates, location, and book title.
+
+  \item[\cmd{makefrontmatter}]
+    Generates the second page with the logo, editor names, book title,
+    institution, and copyright notice.
+\end{description}
+
+\subsection{Program}
+
+\begin{description}[style=nextline, font=\ttfamily\bfseries, leftmargin=2cm]
+  \item[\cmd{cpbbeginprogram}]
+    Opens the program section: inserts a ``Part~1'' divider page,
+    switches to two-column mode, and activates fancy headers.
+    After this, include your program content (day headings, session
+    headings, talk entries).
+
+  \item[\cmd{programpartindex}]
+    Convenience macro that outputs the standard four-part index
+    (Program, Abstracts, Participants, Comments) with dotted leaders.
+    Call this after your program content and before \cmd{cpbendprogram}.
+
+  \item[\cmd{cpbendprogram}]
+    Closes the program section.
+\end{description}
+
+\subsection{Abstracts}
+
+\begin{description}[style=nextline, font=\ttfamily\bfseries, leftmargin=2cm]
+  \item[\cmd{cpbbeginabstracts}]
+    Opens the abstracts section with a ``Part~2'' divider page and
+    switches to one-column mode.
+
+  \item[\cmd{cpbendabstracts}]
+    Closes the abstracts section.
+\end{description}
+
+\subsection{Participants}
+
+\begin{description}[style=nextline, font=\ttfamily\bfseries, leftmargin=2cm]
+  \item[\cmd{cpbbeginparticipants}]
+    Opens the participant list section with a ``Part~3'' divider page
+    and switches to two-column mode.
+
+  \item[\cmd{cpbendparticipants}]
+    Closes the participant list section and starts a new page.
+\end{description}
+
+\subsection{Comments / Organizational Info}
+
+\begin{description}[style=nextline, font=\ttfamily\bfseries, leftmargin=2cm]
+  \item[\cmd{cpbbegincomments}]
+    Opens the comments section (``Part~4'') in one-column mode.
+    This section typically contains free-form \LaTeX{} content: welcome text,
+    practical info, landscape schedule tables, venue maps, etc.
+
+  \item[\cmd{cpbendcomments}]
+    Closes the comments section.
+\end{description}
+
+%% ================================================================
+\section{Program Entry Commands}
+\label{sec:program}
+%% ================================================================
+
+These commands typeset the individual entries within the program section.
+
+\subsection{\cmd{dayheading} --- Day Separator}
+
+\begin{lstlisting}
+\dayheading{Tuesday, March 24, 2026}
+\end{lstlisting}
+
+Produces a full-width colored box (using the ``day'' color scheme) with the
+day title centered in bold. Automatically inserts a page break before the heading.
+
+\subsection{\cmd{pleheading} --- Plenary Session Heading}
+
+\begin{lstlisting}
+\pleheading{Plenary}{Fagus}{Data-Enabled Predictive Control}
+  {Florian Doerfler}{Raphael Jungers}{11:15--12:15}
+\end{lstlisting}
+
+Six arguments:
+\begin{enumerate}[nosep]
+  \item \meta{type} --- e.g., ``Plenary'' (can be empty).
+  \item \meta{room} --- room name.
+  \item \meta{title} --- talk/event title.
+  \item \meta{speaker} --- speaker name (can be empty).
+  \item \meta{chair} --- session chair.
+  \item \meta{time} --- time slot.
+\end{enumerate}
+
+\subsection{\cmd{sesheading} --- Regular Session Heading}
+
+\begin{lstlisting}
+\sesheading{TueA01}{Fagus}
+  {Neuromorphic Systems and Control I}
+  {Rodolphe Sepulchre}{13:15--15:35}
+\end{lstlisting}
+
+Five arguments: \meta{code}, \meta{room}, \meta{title}, \meta{chair}, \meta{time}.
+
+\subsection{\cmd{puttalk} --- Individual Talk Entry}
+
+\begin{lstlisting}
+\puttalk{TueA01-1\hfill 13.15-13.35}
+  {\puttalktitle{Inferring Neuromodulatory Targets}{paper700}}
+  {Julien Brandoit}{University of Liege}
+  {Pierre Sacre}{University of Liege}
+  {Damien Ernst}{University of Liege}
+  {Julien Brandoit}
+\end{lstlisting}
+
+Nine arguments:
+\begin{enumerate}[nosep]
+  \item \meta{ID + time} --- talk code and time slot (use \verb|\hfill| to right-align time).
+  \item \meta{title line} --- typically a \cmd{puttalktitle} call.
+  \item \meta{author1} --- first author name.
+  \item \meta{affil1} --- first author affiliation.
+  \item \meta{author2} --- second author (empty string \verb|{}| if none).
+  \item \meta{affil2} --- second author affiliation.
+  \item \meta{author3} --- third author.
+  \item \meta{affil3} --- third author affiliation.
+  \item \meta{presenter} --- presenting author name.
+\end{enumerate}
+
+Leave unused author/affiliation pairs as \verb|{}{}|.
+
+\subsection{\cmd{puttalktitle} --- Talk Title with Page Reference}
+
+\begin{lstlisting}
+\puttalktitle{My Talk Title}{paper700}
+\end{lstlisting}
+
+Two arguments: \meta{title} and \meta{label}. Produces an italicized title
+with dotted leaders to the page where the corresponding abstract PDF begins
+(matching the label set by \cmd{includepaper}).
+
+\subsection{\cmd{putplen} --- Part Entry in Program Index}
+
+\begin{lstlisting}
+\putplen{Part 1: Programmatic Table of Contents}
+  {Overview of scientific program}{P:1}
+\end{lstlisting}
+
+Three arguments: \meta{title}, \meta{subtitle}, \meta{label}.
+
+%% ================================================================
+\section{Abstract Inclusion}
+\label{sec:abstracts}
+%% ================================================================
+
+\subsection{\cmd{includepaper} --- Include a Paper PDF}
+
+\begin{lstlisting}
+\includepaper{paper700}{pdf/bmsc2026_700.pdf}
+\end{lstlisting}
+
+Two mandatory arguments:
+\begin{enumerate}[nosep]
+  \item \meta{label} --- a unique label (used by \cmd{puttalktitle} for page references).
+  \item \meta{filepath} --- path to the PDF file.
+\end{enumerate}
+
+Optional argument for custom scale:
+
+\begin{lstlisting}
+\includepaper[0.90]{paper700}{pdf/bmsc2026_700.pdf}
+\end{lstlisting}
+
+If omitted, the global \cmd{pdfscale} value is used (default: 0.95).
+Each included PDF gets the fancy page style and increments the internal
+PDF page counter.
+
+%% ================================================================
+\section{Participant List}
+\label{sec:participants}
+%% ================================================================
+
+\subsection{\cmd{putpart} --- Participant Entry}
+
+\begin{lstlisting}
+\putpart{}{Alice Smith}{ETH Zurich}{}{alice@ethz.ch}
+\end{lstlisting}
+
+Five arguments:
+\begin{enumerate}[nosep]
+  \item \meta{prefix} --- optional prefix (e.g., ``Prof.'').
+  \item \meta{name} --- participant name.
+  \item \meta{affiliation} --- institution.
+  \item \meta{extra} --- additional info (can be empty).
+  \item \meta{email} --- email address (rendered as a \texttt{mailto:} link; leave empty to omit).
+\end{enumerate}
+
+%% ================================================================
+\section{Color Customization}
+\label{sec:colors}
+%% ================================================================
+
+The class defines three color groups, each with fill, frame, and text colors.
+Customize them in the preamble.
+
+\subsection{Commands}
+
+Each setter takes three arguments. Each argument is a color specification
+in the form \verb|{model}{value}|, exactly as you would pass to
+\verb|\definecolor|.
+
+\begin{lstlisting}
+% Dark blue theme for day headings
+\setdaycolors
+  {rgb}{0.1, 0.2, 0.5}    % fill
+  {rgb}{0.05, 0.1, 0.3}   % frame
+  {gray}{1}                % text (white)
+
+% Gold plenary theme
+\setplenarycolors
+  {rgb}{0.85, 0.65, 0.13}  % fill
+  {rgb}{0.72, 0.53, 0.04}  % frame
+  {gray}{0}                 % text (black)
+
+% Light gray session theme
+\setsessioncolors
+  {gray}{0.9}
+  {gray}{0.6}
+  {gray}{0}
+
+% Table accent column color
+\settableaccentcolor{rgb}{0.9, 0.95, 1.0}
+\end{lstlisting}
+
+\subsection{Default Colors}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Group} & \textbf{Fill} & \textbf{Frame} & \textbf{Text} \\
+\midrule
+Day     & \texttt{rgb\{1,.2,.2\}} (red)    & same as fill & \texttt{gray\{0\}} (black) \\
+Plenary & \texttt{rgb\{.4,0,.8\}} (purple) & same as fill & \texttt{gray\{1\}} (white) \\
+Session & \texttt{rgb\{.8,.8,1\}} (light blue) & same as fill & \texttt{gray\{0\}} (black) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ================================================================
+\section{Landscape Program Tables}
+\label{sec:landscape}
+%% ================================================================
+
+The comments section often includes landscape overview tables.
+The class provides helpers for this:
+
+\begin{description}[style=nextline, font=\ttfamily\bfseries, leftmargin=2cm]
+  \item[\cmd{setlandscapecolwidth}\marg{length}]
+    Set the width of landscape tables (default: \texttt{244mm}).
+
+  \item[\cmd{rr}]
+    Shorthand for \cmd{raggedright}, useful inside \texttt{tabularx} cells.
+
+  \item[\cmd{accentcol}]
+    Column specifier prefix for accent-colored columns. Use as:
+    \verb|\begin{tabularx}{\cpb@colw}{\accentcol lX|X|...}|
+\end{description}
+
+\begin{lstlisting}
+\begin{landscape}
+\vfill
+\centerline{\large\textbf{Tuesday, March 24, 2026}}
+\begin{tabularx}{244mm}{\accentcol lX|X|X|Xl|}
+\hline
+Room & Fagus & Salix & Populus & \\
+...
+\end{tabularx}
+\vfill
+\end{landscape}
+\end{lstlisting}
+
+%% ================================================================
+\section{Utility Commands}
+\label{sec:utility}
+%% ================================================================
+
+\begin{description}[style=nextline, font=\ttfamily\bfseries, leftmargin=2cm]
+  \item[\cmd{euros}\marg{amount}]
+    Formats a euro amount: \verb|\euros{600}| renders as ``€~600''.
+
+  \item[\cmd{RED}\marg{text}]
+    Highlights text in the highlight color (default red).
+
+  \item[\cmd{programskip}]
+    Shorthand for \verb|\medskip\nopagebreak|, the most common spacing
+    pattern between program entries.
+\end{description}
+
+%% ================================================================
+\section{Customizing Part Names}
+\label{sec:partnames}
+%% ================================================================
+
+If you want to rename the four standard parts (e.g., to a different language),
+use:
+
+\begin{lstlisting}
+\setpartname{I}{Partie 1}{Table des matieres programmatique}
+\setpartname{II}{Partie 2}{Resumes}
+\setpartname{III}{Partie 3}{Liste des participants}
+\setpartname{IV}{Partie 4}{Informations pratiques}
+\end{lstlisting}
+
+Note: this currently sets internal macros. The high-level structure
+commands (\cmd{cpbbeginprogram}, etc.) use hardcoded English strings for
+the divider pages. For full localization, override the structure commands
+or redefine them after loading the class.
+
+%% ================================================================
+\section{Package Dependencies}
+\label{sec:dependencies}
+%% ================================================================
+
+The class automatically loads the following packages. You do \emph{not}
+need to load them yourself.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Package} & \textbf{Purpose} \\
+\midrule
+\pkg{amsmath}, \pkg{amsfonts}, \pkg{amssymb}, \pkg{amstext} & Math support \\
+\pkg{graphicx} & Image inclusion \\
+\pkg{xcolor} (with \texttt{table} option) & Color support \\
+\pkg{latexsym} & Additional symbols \\
+\pkg{ifthen}, \pkg{etoolbox} & Conditionals \\
+\pkg{tabularx}, \pkg{ltablex} & Flexible tables \\
+\pkg{lscape} & Landscape pages \\
+\pkg{fancyhdr} & Custom headers/footers \\
+\pkg{pdfpages} & PDF inclusion \\
+\pkg{fontenc} (T1) & Font encoding \\
+\pkg{hyperref} & Hyperlinks and PDF metadata \\
+\pkg{pgfkeys} & Key-value processing \\
+\pkg{xparse} & Extended command definitions \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ================================================================
+\section{Migrating from a Manual Setup}
+\label{sec:migration}
+%% ================================================================
+
+If you have an existing conference book that uses manual \cmd{newcommand}
+definitions (like the original Benelux Meeting setup), migration is
+straightforward:
+
+\begin{enumerate}
+  \item Replace \verb|\documentclass{book}| with
+        \verb|\documentclass[a4paper]{confprogbook}|.
+  \item Delete your package loading block --- the class loads everything.
+  \item Delete your custom command definitions (\cmd{dayheading},
+        \cmd{pleheading}, \cmd{sesheading}, etc.) --- they are now
+        provided by the class.
+  \item Delete your color definitions --- the class provides defaults.
+        Customize with \cmd{setdaycolors} etc.\ if needed.
+  \item Delete your page layout settings --- the class handles this.
+  \item Add metadata commands in the preamble (\cmd{conferencetitle}, etc.).
+  \item Replace your manual section structure with the high-level
+        commands (\cmd{makefrontcover}, \cmd{cpbbeginprogram}, etc.).
+  \item Replace long \verb|\includepdf[...]| calls with
+        \verb|\includepaper{label}{file}|.
+  \item Your \cmd{puttalk}, \cmd{putpart}, and content files
+        work \emph{unchanged}.
+\end{enumerate}
+
+%% ================================================================
+\section{Frequently Asked Questions}
+\label{sec:faq}
+%% ================================================================
+
+\paragraph{Can I use this with \LuaLaTeX{} or \XeLaTeX{}?}
+Yes. The class uses standard packages that work across all major engines.
+If using \LuaLaTeX/\XeLaTeX, you may want to add \pkg{fontspec} in your
+document preamble for system fonts.
+
+\paragraph{Can I add extra parts beyond the four standard ones?}
+Yes. The structure commands are just convenience macros. You can freely
+add \verb|\onecolumn|, \verb|\twocolumn|, \verb|\cleardoublepage|, etc.\
+and create additional sections as needed.
+
+\paragraph{Can I use this on Overleaf?}
+Yes. Upload \texttt{confprogbook.cls} to your Overleaf project root
+(same directory as your \texttt{main.tex}) and it will be found
+automatically. See Section~\ref{sec:overleaf} for details.
+
+\paragraph{How do I change the header text?}
+Use \cmd{conferenceshort} for the left/right header and \cmd{booktitle}
+for the other side.
+
+%% ================================================================
+\section{Publishing to CTAN and Overleaf}
+\label{sec:publishing}
+%% ================================================================
+
+\subsection{CTAN Submission}
+\label{sec:ctan}
+
+To make the class available to the entire \LaTeX{} community via
+CTAN (Comprehensive \TeX{} Archive Network):
+
+\begin{enumerate}
+  \item \textbf{Prepare the TDS-compliant archive:}
+  \begin{verbatim}
+  confprogbook/
+    confprogbook.cls
+    confprogbook-doc.tex
+    confprogbook-doc.pdf
+    README.md
+    LICENSE
+    example/
+      main.tex
+      program.tex
+      abstracts.tex
+      participants.tex
+      comments.tex
+  \end{verbatim}
+
+  \item \textbf{Compile the documentation:}
+  \begin{verbatim}
+  pdflatex confprogbook-doc.tex
+  pdflatex confprogbook-doc.tex
+  \end{verbatim}
+
+  \item \textbf{Create a zip archive:}
+  \begin{verbatim}
+  zip -r confprogbook.zip confprogbook/
+  \end{verbatim}
+
+  \item \textbf{Submit to CTAN:}
+  \begin{itemize}[nosep]
+    \item Go to \url{https://ctan.org/upload}.
+    \item Fill in the metadata: name (\texttt{confprogbook}), version,
+          summary, license (LPPL 1.3c), author.
+    \item Upload the zip file.
+    \item CTAN volunteers will review and integrate the package
+          (typically within a few days).
+  \end{itemize}
+
+  \item \textbf{TeX Live / MiKTeX integration:}
+    Once on CTAN, the package will be picked up by TeX~Live and MiKTeX
+    in their next update cycle. Users can then install it via their
+    package manager.
+\end{enumerate}
+
+\subsection{Overleaf Availability}
+\label{sec:overleaf}
+
+Overleaf uses TeX~Live, so once your package is on CTAN and included in
+TeX~Live, it becomes automatically available on Overleaf. There are also
+faster paths:
+
+\begin{enumerate}
+  \item \textbf{Immediate use (any project):} Upload \texttt{confprogbook.cls}
+        directly into your Overleaf project.
+
+  \item \textbf{Overleaf template gallery:} Create a template project on
+        Overleaf with the class and example files, then submit it to the
+        \href{https://www.overleaf.com/latex/templates}{Overleaf Gallery}
+        via \texttt{Submit to Gallery} in the project menu.
+
+  \item \textbf{Automatic via CTAN $\to$ TeX~Live:} After CTAN acceptance
+        and the next TeX~Live update, users can use
+        \verb|\documentclass{confprogbook}| directly without uploading
+        the \texttt{.cls} file.
+\end{enumerate}
+
+%% ================================================================
+\section{Version History}
+\label{sec:history}
+%% ================================================================
+
+\begin{description}
+  \item[v1.0 (2026/03/11)] Initial release. All core functionality:
+    metadata commands, structure commands, program entries, abstract
+    inclusion, participant lists, color customization.
+\end{description}
+
+%% ================================================================
+\section{Acknowledgments}
+\label{sec:acknowledgments}
+%% ================================================================
+
+This class was inspired by the \LaTeX{} setup used for the
+\emph{Benelux Meeting on Systems and Control} Book of Abstracts,
+originally developed by the conference organizers. Special thanks to
+Gianluca Bianchin, Julien Hendrickx, Rapha\"el Jungers, and Erjen Lefeber.
+
+\end{document}

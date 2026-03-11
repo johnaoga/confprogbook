@@ -1,0 +1,65 @@
+\documentclass[a4paper]{confprogbook}
+
+%%
+%% --- Conference Metadata ---
+%%
+\conferencetitle{10th International Symposium on Examples}
+\conferencesubtitle{on Systems and Control}
+\conferencedate{June 1--3, 2027}
+\conferencelocation{ETH Zurich, Rämistrasse 101, 8092 Zurich, Switzerland}
+\conferenceshort{ISE 2027}
+\booktitle{Book of Abstracts}
+\editors{Alice Smith, Bob Jones, and Carol Lee}
+\institution{ETH Zurich}
+\institutionaddress{Zurich, Switzerland}
+%% \conferencelogo[0.15]{logo.png}  % uncomment if you have a logo
+
+%%
+%% --- Optional: customize colors ---
+%%
+% \setdaycolors{rgb}{0.1,0.2,0.5}{rgb}{0.05,0.1,0.3}{gray}{1}
+% \setplenarycolors{rgb}{0.85,0.65,0.13}{rgb}{0.72,0.53,0.04}{gray}{0}
+% \setsessioncolors{gray}{0.9}{gray}{0.6}{gray}{0}
+
+\begin{document}
+
+%%
+%% --- Front Matter ---
+%%
+\makefrontcover
+\makefrontmatter
+
+%%
+%% --- Part 1: Programmatic Table of Contents ---
+%%
+\cpbbeginprogram
+
+\input{program}
+
+\programskip
+\programpartindex
+
+\cpbendprogram
+
+%%
+%% --- Part 2: Abstracts ---
+%%
+\cpbbeginabstracts
+\input{abstracts}
+\cpbendabstracts
+
+%%
+%% --- Part 3: List of Participants ---
+%%
+\cpbbeginparticipants
+\input{participants}
+\cpbendparticipants
+
+%%
+%% --- Part 4: Organizational Comments ---
+%%
+\cpbbegincomments
+\input{comments}
+\cpbendcomments
+
+\end{document}
